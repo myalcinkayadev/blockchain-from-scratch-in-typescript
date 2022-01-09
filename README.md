@@ -1,5 +1,6 @@
 # blockchain-from-scratch-in-typescript
-
+ Bitcoin Whitepaper: https://bitcoin.org/bitcoin.pdf
+ 
 ## Main goal of the repository
 
 - Build a blockchain and cryptocurrency to understand these technologies.
