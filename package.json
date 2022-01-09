@@ -8,12 +8,12 @@
     "test": "jest",
     "lint:tsc": "tsc",
     "lint:eslint": "eslint src --ext .ts",
-    "lint": "npm run lint:tsc && npm run lint:eslint",
-    "format": "prettier --write src/**/*.ts && npm run lint:eslint --fix"
+    "lint": "yarn lint:tsc && yarn lint:eslint",
+    "format": "prettier --config .prettierrc --write src/**/*.ts && yarn lint:eslint --fix"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run format"
+      "pre-commit": "yarn format"
     }
   },
   "devDependencies": {
