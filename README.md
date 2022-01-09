@@ -11,7 +11,7 @@
 - Build a blockchain yourself, and demonstrate understanding.
 - It's fascinating and fun 💋
 
-### Sections
+## Sections
 
 - Build the Blockchain - Blocks
 - Build the Blockchain - the Chain
@@ -21,3 +21,11 @@
 - Wallets and Transactions on the Blockchain
 - Collect Transactions in a Pool
 - Mine Transactions in a Block
+
+## Roadmap
+
+- Code the core blockchain
+- Build an API around the blockchain
+- Create a dynamic peer-to-peer server for multiple contributors.
+- Implement a proof-of-work system to balance users.
+- Create a transaction system for a cryptocurrency.
