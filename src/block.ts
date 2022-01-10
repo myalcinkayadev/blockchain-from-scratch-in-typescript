@@ -1,5 +1,5 @@
 import { createHmac } from 'crypto';
-import { BLOCK_HASH_PRIVATE_KEY } from './config';
+import { BLOCK_HASH_PRIVATE_KEY } from '../config';
 
 function assertBlockHashPrivateKey(value: unknown): asserts value is string {
   if (typeof value !== 'string') throw new TypeError('block hash private key is must be a string');
