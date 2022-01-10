@@ -13,6 +13,17 @@ class Blockchain {
 
     return block;
   }
+
+  isValidChain(chain: Block[]) {
+    if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis())) return false;
+
+    return !chain.find(
+      (currentBlock, index) =>
+        index > 0 &&
+        (currentBlock.lastHash !== chain[index - 1].hash ||
+          currentBlock.hash !== Block.blockHash(currentBlock)),
+    );
+  }
 }
 
 export { Blockchain };
