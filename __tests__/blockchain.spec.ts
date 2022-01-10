@@ -38,4 +38,18 @@ describe('blockchain', () => {
 
     expect(blockchain.isValidChain(blockchain2.chain)).toBe(false);
   });
+
+  test('it replaces the chain with a valid chain', () => {
+    blockchain2.addBlock('sisi');
+    blockchain.replaceChain(blockchain2.chain);
+
+    expect(blockchain.chain).toEqual(blockchain2.chain);
+  });
+
+  test('it does not replace the chain with one of less than or equal to length', () => {
+    blockchain.addBlock('mimo');
+    blockchain.replaceChain(blockchain2.chain);
+
+    expect(blockchain.chain).not.toEqual(blockchain2.chain);
+  });
 });
