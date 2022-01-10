@@ -38,6 +38,11 @@ class Block {
     const sha256Hasher = createHmac('sha256', BLOCK_HASH_PRIVATE_KEY);
     return sha256Hasher.update(`${timestamp}${lastHash}${data}`).digest('hex');
   }
+
+  static blockHash(block: Block) {
+    const { timestamp, lastHash, data } = block;
+    return Block.hash(timestamp, lastHash, data);
+  }
 }
 
 export { Block };
