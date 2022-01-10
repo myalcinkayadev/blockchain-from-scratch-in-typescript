@@ -1,18 +1,19 @@
 import { Block } from '../src/block';
 
-describe('block function', () => {
-  test('it should create a block', () => {
-    const block = new Block(0, '-', '-', []);
-    expect(block).toStrictEqual(new Block(0, '-', '-', []));
+describe('block', () => {
+  let data: string, lastBlock: Block, block: Block;
+
+  beforeEach(() => {
+    data = 'foo';
+    lastBlock = Block.genesis();
+    block = Block.mineBlock(lastBlock, data);
   });
-  test('it should create a genesis block', () => {
-    const genesisBlock = Block.genesis();
-    const expectedGenesisBlock = new Block(0, '-', '-', []);
-    expect(genesisBlock).toStrictEqual(expectedGenesisBlock);
+
+  test('it sets that `data` to match the input', () => {
+    expect(block.data).toEqual(data);
   });
-  test('it should create a mine block', () => {
-    const genesisBlock = Block.genesis();
-    const mineBlock = Block.mineBlock(genesisBlock, []);
-    expect(genesisBlock.hash).toStrictEqual(mineBlock.lastHash);
+
+  test('it sets the `lastHash` to match the hash of the last block', () => {
+    expect(block.lastHash).toEqual(lastBlock.hash);
   });
 });
