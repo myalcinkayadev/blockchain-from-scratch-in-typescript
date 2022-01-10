@@ -14,6 +14,9 @@ packages/**/*.js
 # articafts
 /dist
 
+# environment
+.env
+
 # misc
 .DS_Store
 lerna-debug.log
