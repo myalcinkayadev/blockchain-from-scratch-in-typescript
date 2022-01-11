@@ -1,4 +1,4 @@
-import { Block } from '../src/block';
+import { Block } from 'blockchain/block';
 
 describe('block', () => {
   let data: string, lastBlock: Block, block: Block;
