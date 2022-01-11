@@ -9,9 +9,9 @@
     "start:dev": "nodemon",
     "build": "rimraf ./dist && tsc",
     "lint:tsc": "tsc",
-    "lint:eslint": "eslint src --ext .ts",
+    "lint:eslint": "eslint **/*.ts",
     "lint": "yarn lint:tsc && yarn lint:eslint",
-    "format": "prettier --config .prettierrc --write __tests__/**/*.ts src/**/*.ts && yarn lint:eslint --fix",
+    "format": "prettier --config .prettierrc --write **/*.ts && yarn lint:eslint --fix",
     "test": "jest",
     "test:dev": "jest --watchAll"
   },
