@@ -1,3 +1,3 @@
-import bunyan from 'bunyan';
-
-export const log = bunyan.createLogger({ name: 'blockchain api' });
+import logger from 'pino';
+const log = logger();
+export { log };
