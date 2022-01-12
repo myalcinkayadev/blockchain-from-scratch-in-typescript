@@ -1,3 +1,4 @@
+import { log } from 'logger';
 import { Block } from './block';
 
 class Blockchain {
@@ -29,7 +30,7 @@ class Blockchain {
     // Received chain is not longer than the current chain or the received chain is not valid
     if (newChain.length <= this.chain.length || !this.isValidChain(newChain)) return;
 
-    // Replacing blockchain with the new chain
+    log.info('Replacing blockchain with the new chain');
     this.chain = newChain;
   }
 }
