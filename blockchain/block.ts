@@ -1,9 +1,5 @@
-import { createHmac } from 'crypto';
-import { BLOCK_HASH_PRIVATE_KEY, GENESIS_DATA, MINE_RATE } from '../config';
-
-function assertBlockHashPrivateKey(value: unknown): asserts value is string {
-  if (typeof value !== 'string') throw new TypeError('block hash private key is must be a string');
-}
+import { ChainUtil } from '../util';
+import { GENESIS_DATA, MINE_RATE } from '../config';
 
 class Block {
   constructor(
@@ -56,9 +52,7 @@ class Block {
     nonce: number,
     difficulty: number,
   ) {
-    assertBlockHashPrivateKey(BLOCK_HASH_PRIVATE_KEY);
-    const sha256Hasher = createHmac('sha256', BLOCK_HASH_PRIVATE_KEY);
-    return sha256Hasher.update(`${timestamp}${lastHash}${data}${nonce}${difficulty}`).digest('hex');
+    return ChainUtil.hash(`${timestamp}${lastHash}${data}${nonce}${difficulty}`);
   }
 
   static blockHash(block: Block) {
