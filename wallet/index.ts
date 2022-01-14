@@ -17,6 +17,10 @@ class Wallet {
       publicKey : ${this.publicKey.toString()}
       balance   : ${this.balance}`;
   }
+
+  sign(dataHash: string) {
+    return this.keyPair.sign(dataHash).toDER('hex');
+  }
 }
 
 export { Wallet };
