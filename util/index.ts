@@ -23,6 +23,10 @@ class ChainUtil {
     const sha256Hasher = createHmac('sha256', BLOCK_HASH_PRIVATE_KEY);
     return sha256Hasher.update(JSON.stringify(data)).digest('hex');
   }
+
+  static verifySignature(publicKey: string, signature: string, dataHash: string) {
+    return ec.keyFromPublic(publicKey, 'hex').verify(dataHash, signature);
+  }
 }
 
 export { ChainUtil, EC };
