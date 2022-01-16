@@ -4,9 +4,11 @@ import { P2PServer } from './p2p-server';
 import { HTTP_PORT } from 'config';
 
 import { Blockchain } from 'blockchain';
+import { Wallet } from 'wallet';
 import { TransactionPool } from 'wallet/transaction-pool';
 
 const blockchain = new Blockchain();
+const wallet = new Wallet();
 const transactionPool = new TransactionPool();
 
 const server: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
@@ -31,6 +33,17 @@ server.post<{ Body: MineRequestBody }>('/mine', (request, reply) => {
 
 server.get('/transactions', (_request, reply) => {
   reply.send(transactionPool.transactions);
+});
+
+type TransactRequestBody = {
+  recipientAddress: string;
+  amount: number;
+};
+
+server.post<{ Body: TransactRequestBody }>('/transact', (request, reply) => {
+  const { recipientAddress, amount } = request.body;
+  wallet.createTransaction(recipientAddress, amount, transactionPool);
+  reply.redirect('/transactions');
 });
 
 const fatal = (err: unknown) => {
