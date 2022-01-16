@@ -1,7 +1,7 @@
 import { ChainUtil } from '../util';
-import { Wallet } from 'wallet';
 import { Either, left, right } from 'util/either';
-import { ErrorMessage } from '../util/error';
+import { ErrorMessage } from 'util/error';
+import { Wallet } from 'wallet';
 
 type TransactionOutput = {
   amount: number;
