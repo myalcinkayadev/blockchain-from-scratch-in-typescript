@@ -47,6 +47,10 @@ server.post<{ Body: TransactRequestBody }>('/transact', (request, reply) => {
   reply.redirect('/transactions');
 });
 
+server.get('/public-key', (_request, reply) => {
+  reply.send({ publicKey: wallet.publicKey });
+});
+
 const fatal = (err: unknown) => {
   server.log.error(err);
   process.exit(1);
