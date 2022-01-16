@@ -6,7 +6,10 @@
       "baseUrl": "./",
       "outDir": "./dist",
       "paths": {
-        "@/*": ["app/*", "blockchain/*", "wallet/*", "util/*"]
+        "app/*": ["app/*"],
+        "blockchain/*": ["blockchain/*"],
+        "wallet/*": ["wallet/*"],
+        "util/*": ["util/*"]
       },
       "strict": true,
       "noEmitHelpers": false,
