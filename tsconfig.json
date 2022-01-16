@@ -5,6 +5,9 @@
       "sourceMap": true,
       "baseUrl": "./",
       "outDir": "./dist",
+      "paths": {
+        "@/*": ["app/*", "blockchain/*", "wallet/*", "util/*"]
+      },
       "strict": true,
       "noEmitHelpers": false,
       "noImplicitAny": true,
