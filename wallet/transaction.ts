@@ -1,6 +1,7 @@
 import { ChainUtil } from '../util';
 import { Wallet } from 'wallet';
 import { Either, left, right } from 'util/either';
+import { ErrorMessage } from '../util/error';
 
 type TransactionOutput = {
   amount: number;
@@ -12,10 +13,6 @@ type TransactionInput = {
   amount: number;
   address: string;
   signature: string;
-};
-
-type MessageError = {
-  message: string;
 };
 
 export const senderWalletAddressCouldNotFindError = () => ({
@@ -44,7 +41,7 @@ class Transaction {
     senderWallet: Wallet,
     recipientAddress: string,
     amount: number,
-  ): Either<MessageError, Transaction> {
+  ): Either<ErrorMessage, Transaction> {
     const senderOutput = this.outputs.find((output) => output.address === senderWallet.publicKey);
 
     if (!senderOutput) return left(senderWalletAddressCouldNotFindError());
@@ -63,7 +60,7 @@ class Transaction {
     senderWallet: Wallet,
     recipientAddress: string,
     amount: number,
-  ): Either<MessageError, Transaction> {
+  ): Either<ErrorMessage, Transaction> {
     const transaction = new this();
 
     if (transaction.isAmountExceedsBalance(amount, senderWallet.balance))
