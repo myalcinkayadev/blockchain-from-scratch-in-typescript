@@ -1,7 +1,7 @@
 import { createHmac } from 'crypto';
 import { ec as EC } from 'elliptic';
 import { nanoid } from 'nanoid';
-import { BLOCK_HASH_PRIVATE_KEY } from '../config';
+import { BLOCK_HASH_PRIVATE_KEY } from 'config';
 
 const ec = new EC('secp256k1');
 

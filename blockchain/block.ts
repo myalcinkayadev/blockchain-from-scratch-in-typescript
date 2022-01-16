@@ -1,5 +1,5 @@
 import { ChainUtil } from '../util';
-import { GENESIS_DATA, MINE_RATE } from '../config';
+import { GENESIS_DATA, MINE_RATE } from 'config';
 
 class Block {
   constructor(

@@ -1,6 +1,6 @@
 {
-  "watch": ["app", "blockchain"],
+  "watch": ["app", "blockchain", "wallet", "util"],
   "ext": ".ts",
   "ignore": [],
-  "exec": "ts-node ./app/server.ts"
+  "exec": "ts-node -r tsconfig-paths/register ./app/server.ts"
 }
