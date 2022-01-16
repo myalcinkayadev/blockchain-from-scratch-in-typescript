@@ -1,5 +1,5 @@
-import { Wallet } from '../../wallet';
-import { Transaction } from '../../wallet/transaction';
+import { Wallet } from 'wallet';
+import { Transaction } from 'wallet/transaction';
 
 describe('Transaction', () => {
   let transaction: Transaction, wallet: Wallet, recipientAddress: string, amount: number;

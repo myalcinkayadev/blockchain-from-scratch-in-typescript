@@ -1,7 +1,7 @@
 import { ChainUtil, EC } from '../util';
 import { Either, left, right } from 'util/either';
-import { ErrorMessage } from '../util/error';
-import { INITIAL_BALANCE } from '../config';
+import { ErrorMessage } from 'util/error';
+import { INITIAL_BALANCE } from 'config';
 import { Transaction } from './transaction';
 import { TransactionPool } from './transaction-pool';
 

@@ -1,6 +1,6 @@
-import { TransactionPool } from '../../wallet/transaction-pool';
-import { Transaction } from '../../wallet/transaction';
-import { Wallet } from '../../wallet';
+import { TransactionPool } from 'wallet/transaction-pool';
+import { Transaction } from 'wallet/transaction';
+import { Wallet } from 'wallet';
 
 describe('TransactionPool', () => {
   let transactionPool: TransactionPool, wallet: Wallet, transaction: Transaction;

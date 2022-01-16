@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import { P2P_PORT } from '../config';
+import { P2P_PORT } from 'config';
 import { Blockchain } from 'blockchain';
 import { log } from 'logger';
 
