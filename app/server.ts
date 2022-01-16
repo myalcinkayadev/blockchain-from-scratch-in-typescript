@@ -1,10 +1,13 @@
 import fastify, { FastifyInstance } from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import { P2PServer } from './p2p-server';
-import { HTTP_PORT } from '../config';
+import { HTTP_PORT } from 'config';
 
-import { Blockchain } from '../blockchain';
+import { Blockchain } from 'blockchain';
+import { TransactionPool } from 'wallet/transaction-pool';
+
 const blockchain = new Blockchain();
+const transactionPool = new TransactionPool();
 
 const server: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
   logger: true,
@@ -24,6 +27,10 @@ server.post<{ Body: MineRequestBody }>('/mine', (request, reply) => {
   blockchain.addBlock(data);
   p2pServer.syncChains();
   reply.redirect('/blocks');
+});
+
+server.get('/transactions', (_request, reply) => {
+  reply.send(transactionPool.transactions);
 });
 
 const fatal = (err: unknown) => {
