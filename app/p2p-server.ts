@@ -2,14 +2,20 @@ import WebSocket from 'ws';
 import { P2P_PORT } from 'config';
 import { Blockchain } from 'blockchain';
 import { log } from 'logger';
+import { Transaction } from 'wallet/transaction';
+import { TransactionPool } from 'wallet/transaction-pool';
 
-// in-memory peers
 const peers: string[] = process.env.PEERS ? process.env.PEERS.split(',') : [];
+const MESSAGE_TYPES = {
+  chain: 'CHAIN',
+  transaction: 'TRANSACTION',
+};
 
 class P2PServer {
+  // in-memory peers
   private sockets: WebSocket[];
 
-  constructor(private blockChain: Blockchain) {
+  constructor(private blockChain: Blockchain, private transactionPool: TransactionPool) {
     this.sockets = [];
   }
 
@@ -42,19 +48,32 @@ class P2PServer {
   private messageHandler(socket: WebSocket) {
     socket.on('message', (message) => {
       // TODO: In near future we will accept binary data to blockchain
-      // if (!isBinary) {
       const data = JSON.parse(message.toString());
-      // }
-      this.blockChain.replaceChain(data);
+      switch (data.type) {
+        case MESSAGE_TYPES.chain:
+          this.blockChain.replaceChain(data.chain);
+          break;
+        case MESSAGE_TYPES.transaction:
+          this.transactionPool.updateOrAddTransaction(data.transaction);
+          break;
+      }
     });
   }
 
-  private sendChain(socket: WebSocket) {
-    socket.send(JSON.stringify(this.blockChain.chain));
+  private sendTransaction(socket: WebSocket, transaction: Transaction) {
+    socket.send(JSON.stringify({ type: MESSAGE_TYPES.transaction, transaction }));
   }
 
-  public syncChains() {
+  private sendChain(socket: WebSocket) {
+    socket.send(JSON.stringify({ type: MESSAGE_TYPES.chain, chain: this.blockChain.chain }));
+  }
+
+  syncChains() {
     this.sockets.forEach((socket) => this.sendChain(socket));
+  }
+
+  broadcastTransaction(transaction: Transaction) {
+    this.sockets.forEach((socket) => this.sendTransaction(socket, transaction));
   }
 }
 
