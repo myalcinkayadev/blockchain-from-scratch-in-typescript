@@ -14,7 +14,7 @@ const transactionPool = new TransactionPool();
 const server: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
   logger: true,
 });
-const p2pServer = new P2PServer(blockchain);
+const p2pServer = new P2PServer(blockchain, transactionPool);
 
 server.get('/blocks', (_request, reply) => {
   reply.send(blockchain.chain);
@@ -42,7 +42,8 @@ type TransactRequestBody = {
 
 server.post<{ Body: TransactRequestBody }>('/transact', (request, reply) => {
   const { recipientAddress, amount } = request.body;
-  wallet.createTransaction(recipientAddress, amount, transactionPool);
+  const transactionResult = wallet.createTransaction(recipientAddress, amount, transactionPool);
+  if (transactionResult.isRight()) p2pServer.broadcastTransaction(transactionResult.value);
   reply.redirect('/transactions');
 });
 
