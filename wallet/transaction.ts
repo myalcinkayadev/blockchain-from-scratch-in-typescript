@@ -2,6 +2,7 @@ import { ChainUtil } from '../util';
 import { Either, left, right } from 'util/either';
 import { ErrorMessage } from 'util/error';
 import { Wallet } from 'wallet';
+import { MINING_REWARD } from 'config';
 
 type TransactionOutput = {
   amount: number;
@@ -56,6 +57,13 @@ class Transaction {
     return right(this);
   }
 
+  static transactionWithOutputs(senderWallet: Wallet, outputs: TransactionOutput[]) {
+    const transaction = new this();
+    transaction.outputs.push(...outputs);
+    Transaction.signTransaction(transaction, senderWallet);
+    return transaction;
+  }
+
   static newTransaction(
     senderWallet: Wallet,
     recipientAddress: string,
@@ -66,16 +74,21 @@ class Transaction {
     if (transaction.isAmountExceedsBalance(amount, senderWallet.balance))
       return left(amountExceedsBalanceError(amount));
 
-    transaction.outputs.push(
-      ...[
+    return right(
+      Transaction.transactionWithOutputs(senderWallet, [
         { amount: senderWallet.balance - amount, address: senderWallet.publicKey },
         { amount, address: recipientAddress },
-      ],
+      ]),
     );
+  }
 
-    Transaction.signTransaction(transaction, senderWallet);
-
-    return right(transaction);
+  static rewardTransaction(minerWallet: Wallet, blockchainWallet: Wallet) {
+    return Transaction.transactionWithOutputs(blockchainWallet, [
+      {
+        amount: MINING_REWARD,
+        address: minerWallet.publicKey,
+      },
+    ]);
   }
 
   static signTransaction(transaction: Transaction, senderWallet: Wallet) {
