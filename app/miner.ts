@@ -1,20 +1,25 @@
-// import { Blockchain } from 'blockchain';
-// import { Wallet } from 'wallet';
-// import { TransactionPool } from 'wallet/transaction-pool';
-// import { P2PServer } from './p2p-server';
+import { Blockchain } from 'blockchain';
+import { Wallet } from 'wallet';
+import { Transaction } from 'wallet/transaction';
+import { TransactionPool } from 'wallet/transaction-pool';
+import { P2PServer } from './p2p-server';
 
-// Since the miner class ties blockchain and transaction pool together
 class Miner {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {} // private p2pServer: P2PServer, // private wallet: Wallet, // private transactionPool: TransactionPool, // private blockChain: Blockchain,
-
+  constructor(
+    private blockchain: Blockchain,
+    private transactionPool: TransactionPool,
+    private wallet: Wallet,
+    private p2pServer: P2PServer,
+  ) {}
   mine() {
-    // get valid transaction from transaction pool
-    // include a reward for the miner
-    // create a block consisting of the valid transactions
-    // syncronize the chains in the peer to peer server
-    // clear the transaction pool
-    // broadcast to every miner to clear their transaction pools
+    const validTransactions = this.transactionPool.validTransactions();
+    validTransactions.push(Transaction.rewardTransaction(this.wallet, Wallet.blockchainWallet()));
+    const block = this.blockchain.addBlock(validTransactions);
+    this.p2pServer.syncChains();
+    this.transactionPool.clear();
+    this.p2pServer.broadcastClearTransactions();
+
+    return block;
   }
 }
 

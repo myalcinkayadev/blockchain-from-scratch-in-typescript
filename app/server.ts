@@ -6,6 +6,7 @@ import { HTTP_PORT } from 'config';
 import { Blockchain } from 'blockchain';
 import { Wallet } from 'wallet';
 import { TransactionPool } from 'wallet/transaction-pool';
+import { Miner } from './miner';
 
 const blockchain = new Blockchain();
 const wallet = new Wallet();
@@ -15,6 +16,8 @@ const server: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify
   logger: true,
 });
 const p2pServer = new P2PServer(blockchain, transactionPool);
+
+const miner = new Miner(blockchain, transactionPool, wallet, p2pServer);
 
 server.get('/blocks', (_request, reply) => {
   reply.send(blockchain.chain);
@@ -45,6 +48,11 @@ server.post<{ Body: TransactRequestBody }>('/transact', (request, reply) => {
   const transactionResult = wallet.createTransaction(recipientAddress, amount, transactionPool);
   if (transactionResult.isRight()) p2pServer.broadcastTransaction(transactionResult.value);
   reply.redirect('/transactions');
+});
+
+server.get('/mine-transactions', (_request, reply) => {
+  miner.mine();
+  reply.redirect('/blocks');
 });
 
 server.get('/public-key', (_request, reply) => {
