@@ -31,4 +31,39 @@ describe('TransactionPool', () => {
       );
     }
   });
+
+  describe('mixing valid and corrupt transactions', () => {
+    let validTransactions: Transaction[];
+
+    beforeEach(() => {
+      validTransactions = [...transactionPool.transactions];
+
+      function createMixTransactions(limit: number, i = 0) {
+        wallet = new Wallet();
+        const transactionResult = wallet.createTransaction('random-address', 30, transactionPool);
+        if (transactionResult.isRight()) {
+          transaction = transactionResult.value;
+          if (i % 2 === 0) {
+            transaction.input.amount = 99999;
+          } else {
+            validTransactions.push(transaction);
+          }
+        }
+        i++;
+        if (i < limit) createMixTransactions(i, limit);
+      }
+
+      createMixTransactions(7);
+    });
+
+    it('shows a difference between valid and corrupt transactions', () => {
+      expect(JSON.stringify(transactionPool.transactions)).not.toEqual(
+        JSON.stringify(validTransactions),
+      );
+    });
+
+    it('grabs valid transactions', () => {
+      expect(transactionPool.validTransactions()).toEqual(validTransactions);
+    });
+  });
 });

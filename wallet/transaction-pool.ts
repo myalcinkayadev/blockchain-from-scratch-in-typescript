@@ -6,6 +6,14 @@ export const transactionIsNotFoundError = () => ({
   message: 'transaction is not found',
 });
 
+export const invalidTransactionFromAddressError = (transactionAddress: string) => ({
+  message: `Invalid transaction from ${transactionAddress}.`,
+});
+
+export const invalidSignatureFromAddressError = (transactionAddress: string) => ({
+  message: `Invalid signature from ${transactionAddress}.`,
+});
+
 class TransactionPool {
   transactions: Transaction[];
   constructor() {
@@ -13,7 +21,7 @@ class TransactionPool {
   }
 
   updateOrAddTransaction(transaction: Transaction) {
-    const transactionWithId = this.transactions.find((t) => t.id == transaction.id);
+    const transactionWithId = this.findTransaction(transaction.id);
 
     if (transactionWithId) {
       this.transactions[this.transactions.indexOf(transactionWithId)] = transaction;
@@ -30,6 +38,19 @@ class TransactionPool {
 
   findTransaction(transactionId: string) {
     return this.transactions.find((t) => t.id === transactionId);
+  }
+
+  validTransactions() {
+    return this.transactions.filter((transaction) => {
+      const outputTotal = transaction.outputs.reduce((total, output) => {
+        return total + output.amount;
+      }, 0);
+
+      if (transaction.input.amount !== outputTotal) return;
+      if (!Transaction.verifyTransaction(transaction)) return;
+
+      return transaction;
+    });
   }
 }
 
