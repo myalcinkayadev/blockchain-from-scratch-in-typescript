@@ -50,6 +50,11 @@ class Wallet {
     transactionPool.updateOrAddTransaction(transactionResult.value);
     return right(transactionResult.value);
   }
+
+  static blockchainWallet() {
+    const blockchainWallet = new this();
+    return blockchainWallet;
+  }
 }
 
 export { Wallet };
