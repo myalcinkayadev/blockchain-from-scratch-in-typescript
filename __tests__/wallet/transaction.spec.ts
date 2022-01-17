@@ -1,3 +1,4 @@
+import { MINING_REWARD } from 'config';
 import { Wallet } from 'wallet';
 import { Transaction } from 'wallet/transaction';
 
@@ -65,6 +66,18 @@ describe('Transaction', () => {
       expect(
         transaction.outputs.find((output) => output.address === nextRecipient)?.amount,
       ).toEqual(nextAmount);
+    });
+  });
+
+  describe('creating a reward transaction', () => {
+    beforeEach(() => {
+      transaction = Transaction.rewardTransaction(wallet, Wallet.blockchainWallet());
+    });
+
+    it(`reward the miner's wallet`, () => {
+      expect(
+        transaction.outputs.find((output) => output.address === wallet.publicKey)?.amount,
+      ).toEqual(MINING_REWARD);
     });
   });
 });
