@@ -32,6 +32,11 @@ describe('TransactionPool', () => {
     }
   });
 
+  it('clears transactions', () => {
+    transactionPool.clear();
+    expect(transactionPool.transactions).toEqual([]);
+  });
+
   describe('mixing valid and corrupt transactions', () => {
     let validTransactions: Transaction[];
 
@@ -53,7 +58,7 @@ describe('TransactionPool', () => {
         if (i < limit) createMixTransactions(i, limit);
       }
 
-      createMixTransactions(7);
+      createMixTransactions(6);
     });
 
     it('shows a difference between valid and corrupt transactions', () => {
