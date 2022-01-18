@@ -4,6 +4,7 @@ import { ErrorMessage } from 'util/error';
 import { INITIAL_BALANCE } from 'config';
 import { Transaction } from './transaction';
 import { TransactionPool } from './transaction-pool';
+import { Blockchain } from 'blockchain';
 
 export const amountExcecedsCurrentBalanceError = (amount: number, balance: number) => ({
   message: `Amount: ${amount} exceeds current balance: ${balance}`,
@@ -33,8 +34,11 @@ class Wallet {
   createTransaction(
     recipientAddress: string,
     amount: number,
+    blockchain: Blockchain,
     transactionPool: TransactionPool,
   ): Either<ErrorMessage, Transaction> {
+    this.balance = this.calculateBalance(blockchain);
+
     if (amount > this.balance) return left(amountExcecedsCurrentBalanceError(amount, this.balance));
 
     let transactionResult = transactionPool.existingTransaction(this.publicKey);
@@ -49,6 +53,48 @@ class Wallet {
 
     transactionPool.updateOrAddTransaction(transactionResult.value);
     return right(transactionResult.value);
+  }
+
+  calculateBalance(blockchain: Blockchain) {
+    let balance = this.balance;
+    const transactions: Transaction[] = [];
+
+    blockchain.chain.forEach((block) => {
+      (block.data as Transaction[]).forEach((transaction) => {
+        transactions.push(transaction);
+      });
+    });
+
+    const walletInputTransaction = transactions.filter(
+      (transaction) => transaction.input.address === this.publicKey,
+    );
+
+    let startTime = 0;
+
+    if (walletInputTransaction.length > 0) {
+      const recentInputTransaction = walletInputTransaction.reduce((prev, current) =>
+        prev.input.timestamp > current.input.timestamp ? prev : current,
+      );
+
+      const recentInputTransactionAmount = recentInputTransaction.outputs.find(
+        (output) => output.address === this.publicKey,
+      )?.amount;
+
+      if (recentInputTransactionAmount !== undefined) balance = recentInputTransactionAmount;
+      startTime = recentInputTransaction.input.timestamp;
+    }
+
+    transactions.forEach((transaction) => {
+      if (transaction.input.timestamp > startTime) {
+        transaction.outputs.find((output) => {
+          if (output.address === this.publicKey) {
+            balance += output.amount;
+          }
+        });
+      }
+    });
+
+    return balance;
   }
 
   static blockchainWallet() {
