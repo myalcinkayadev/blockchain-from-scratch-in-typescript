@@ -1,12 +1,13 @@
 import { ChainUtil } from '../util';
 import { GENESIS_DATA, MINE_RATE } from 'config';
+import { Transaction } from 'wallet/transaction';
 
 class Block {
   constructor(
     public timestamp: number,
     public lastHash: string,
     public hash: string,
-    public data: unknown,
+    public data: Transaction[] | unknown,
     public nonce: number,
     public difficulty: number,
   ) {}
@@ -40,7 +41,7 @@ class Block {
       timestamp = Date.now();
       difficulty = Block.adjustDifficulty(lastBlock, timestamp);
       hash = Block.hash(timestamp, lastHash, data, nonce, difficulty);
-    } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty < 0 ? 0 : difficulty));
+    } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty < 0 ? 1 : difficulty));
 
     return new this(timestamp, lastHash, hash, data, nonce, difficulty);
   }
