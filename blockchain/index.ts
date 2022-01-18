@@ -1,4 +1,5 @@
 import { log } from 'logger';
+import { Transaction } from 'wallet/transaction';
 import { Block } from './block';
 
 class Blockchain {
@@ -7,7 +8,7 @@ class Blockchain {
     this.chain = [Block.genesis()];
   }
 
-  addBlock(data: unknown) {
+  addBlock(data: unknown | Transaction[]) {
     const lastBlock = this.chain[this.chain.length - 1];
     const block = Block.mineBlock(lastBlock, data);
     this.chain.push(block);
