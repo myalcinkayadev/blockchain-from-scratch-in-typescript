@@ -19,7 +19,7 @@ const GENESIS_DATA = {
 const MILLISECONDS = 1;
 const SECONDS = 1000 * MILLISECONDS;
 const MINE_RATE = 3 * SECONDS;
-const INITIAL_BALANCE = 100;
+const INITIAL_BALANCE = 500;
 const MINING_REWARD = 50;
 
 export {
