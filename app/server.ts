@@ -45,7 +45,12 @@ type TransactRequestBody = {
 
 server.post<{ Body: TransactRequestBody }>('/transact', (request, reply) => {
   const { recipientAddress, amount } = request.body;
-  const transactionResult = wallet.createTransaction(recipientAddress, amount, transactionPool);
+  const transactionResult = wallet.createTransaction(
+    recipientAddress,
+    amount,
+    blockchain,
+    transactionPool,
+  );
   if (transactionResult.isRight()) p2pServer.broadcastTransaction(transactionResult.value);
   reply.redirect('/transactions');
 });
