@@ -1,15 +1,26 @@
 import { TransactionPool } from 'wallet/transaction-pool';
 import { Transaction } from 'wallet/transaction';
 import { Wallet } from 'wallet';
+import { Blockchain } from 'blockchain';
 
 describe('TransactionPool', () => {
-  let transactionPool: TransactionPool, wallet: Wallet, transaction: Transaction;
+  let transactionPool: TransactionPool,
+    wallet: Wallet,
+    transaction: Transaction,
+    blockchain: Blockchain;
 
   beforeEach(() => {
     transactionPool = new TransactionPool();
     wallet = new Wallet();
+    blockchain = new Blockchain();
 
-    const TransactionResult = Transaction.newTransaction(wallet, 'random-address', 30);
+    const TransactionResult = wallet.createTransaction(
+      'random-address',
+      30,
+      blockchain,
+      transactionPool,
+    );
+
     if (TransactionResult.isRight()) {
       transaction = TransactionResult.value;
       transactionPool.updateOrAddTransaction(transaction);
@@ -45,7 +56,12 @@ describe('TransactionPool', () => {
 
       function createMixTransactions(limit: number, i = 0) {
         wallet = new Wallet();
-        const transactionResult = wallet.createTransaction('random-address', 30, transactionPool);
+        const transactionResult = wallet.createTransaction(
+          'random-address',
+          30,
+          blockchain,
+          transactionPool,
+        );
         if (transactionResult.isRight()) {
           transaction = transactionResult.value;
           if (i % 2 === 0) {
