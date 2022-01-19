@@ -55,14 +55,26 @@ class Wallet {
     return right(transactionResult.value);
   }
 
+  private hasTransactions(data: unknown): data is Transaction[] {
+    return Array.isArray(data) && data.length > 0 && 'id' in (data[0] as Transaction);
+  }
+
   calculateBalance(blockchain: Blockchain) {
     let balance = this.balance;
     const transactions: Transaction[] = [];
 
+    /*
+    blockchain.chain.map(
+      (block) => this.hasTransactions(block.data) && block.data,
+    );
+    */
+
     blockchain.chain.forEach((block) => {
-      (block.data as Transaction[]).forEach((transaction) => {
-        transactions.push(transaction);
-      });
+      if (this.hasTransactions(block.data)) {
+        block.data.forEach((transaction) => {
+          transactions.push(transaction);
+        });
+      }
     });
 
     const walletInputTransaction = transactions.filter(
